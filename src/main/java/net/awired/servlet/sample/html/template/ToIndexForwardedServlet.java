@@ -1,4 +1,4 @@
-package net.awired.ajsl.web;
+package net.awired.servlet.sample.html.template;
 
 import java.io.IOException;
 import javax.servlet.ServletConfig;
