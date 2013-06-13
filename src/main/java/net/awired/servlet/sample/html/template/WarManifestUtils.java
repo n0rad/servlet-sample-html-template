@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.jar.Manifest;
 import javax.servlet.ServletContext;
-import net.awired.ajsl.core.io.JarManifestUtils;
+import net.awired.core.io.JarManifestUtils;
 
 public class WarManifestUtils {
 
