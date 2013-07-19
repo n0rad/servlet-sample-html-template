@@ -2,7 +2,7 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>net.awired.servlet.sample.html.template</groupId>
+	<groupId>fr.norad.servlet.sample.html.template</groupId>
 	<artifactId>servlet-sample-html-template</artifactId>
 	<packaging>jar</packaging>
 	<name>Servlet sample html template</name>
@@ -10,22 +10,22 @@
 	<version>0.5-SNAPSHOT</version>
 
 	<parent>
-		<groupId>net.awired.parent</groupId>
+		<groupId>fr.norad.parent</groupId>
 		<artifactId>parent-java</artifactId>
-		<version>1.16</version>
+		<version>1.17-SNAPSHOT</version>
 	</parent>
 
 	<scm>
-		<connection>scm:git:git://github.com/awired/servlet-sample-html-template.git</connection>
-		<developerConnection>scm:git:git@github.com:awired/servlet-sample-html-template.git</developerConnection>
-		<url>http://github.com/awired/servlet-sample-html-template</url>
+		<connection>scm:git:git://github.com/n0rad/servlet-sample-html-template.git</connection>
+		<developerConnection>scm:git:git@github.com:n0rad/servlet-sample-html-template.git</developerConnection>
+		<url>http://github.com/n0rad/servlet-sample-html-template</url>
 	</scm>
 
 	<dependencies>
 		<dependency>
-			<groupId>net.awired.core</groupId>
+			<groupId>fr.norad.core</groupId>
 			<artifactId>core</artifactId>
-			<version>0.5-SNAPSHOT</version>
+			<version>0.7-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
