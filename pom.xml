@@ -12,7 +12,7 @@
 	<parent>
 		<groupId>fr.norad.parent</groupId>
 		<artifactId>parent-java</artifactId>
-		<version>1.17-SNAPSHOT</version>
+		<version>1.18</version>
 	</parent>
 
 	<scm>
@@ -25,7 +25,7 @@
 		<dependency>
 			<groupId>fr.norad.core</groupId>
 			<artifactId>core</artifactId>
-			<version>0.7-SNAPSHOT</version>
+			<version>0.7</version>
 		</dependency>
 
 		<dependency>
