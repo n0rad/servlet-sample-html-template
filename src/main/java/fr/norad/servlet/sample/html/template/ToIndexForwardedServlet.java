@@ -17,6 +17,7 @@
 package fr.norad.servlet.sample.html.template;
 
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -27,21 +28,36 @@ public class ToIndexForwardedServlet extends HttpServlet {
 
     private static final long serialVersionUID = 1L;
 
-    private String path = "/";
+    final LinkedHashMap<String, String> mappings = new LinkedHashMap<>();
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        String indexMapping = config.getInitParameter("indexMapping");
-        if (indexMapping != null) {
-            path = indexMapping;
+        String indexMapping = config.getInitParameter("indexMappings");
+        if (indexMapping == null) {
+            mappings.put("/", "/");
+        } else {
+            String[] lines = indexMapping.split("\n");
+            for (String mapping : lines) {
+                String[] keyValue = mapping.split(":", 2);
+                if (keyValue.length == 2) {
+                    mappings.put(keyValue[0].trim(), keyValue[1].trim());
+                }
+            }
         }
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String requestUriWithPath = (String) req.getAttribute("javax.servlet.forward.request_uri");
+        String requestUri = requestUriWithPath.substring(req.getContextPath().length());
         resp.setStatus(200);
-        req.getRequestDispatcher(path).forward(req, resp);
+        for (String key : mappings.keySet()) {
+            if (requestUri.startsWith(key)) {
+                req.getRequestDispatcher(mappings.get(key)).forward(req, resp);
+                return;
+            }
+        }
     }
 
     @Override

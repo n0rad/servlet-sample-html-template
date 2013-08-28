@@ -34,14 +34,13 @@ import org.apache.commons.lang3.text.StrSubstitutor;
 public class IndexTemplateServlet extends HttpServlet {
 
     private static final String TEMPLATE_PATH = "tplPath";
-
-    private String tplPath;
-
-    private static final String VERSIONING_PARAM_NAME = "versioningParamName";
+    private static final String CONTEXT_PATH_SUFFIX = "contextPathSuffix";
 
     private final Properties manifestProperties = new Properties();
-    private final Map<String, String> propertiesNames = new HashMap<String, String>();
-    private String versioningName;
+    private final Map<String, String> propertiesNames = new HashMap<>();
+
+    private String tplPath;
+    private String contextPathSuffix;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -49,7 +48,7 @@ public class IndexTemplateServlet extends HttpServlet {
         tplPath = config.getInitParameter(TEMPLATE_PATH);
         Validate.notNull(tplPath, "{} init param must be set", TEMPLATE_PATH);
         loadPropertiesFromManifest(config);
-        versioningName = config.getInitParameter(VERSIONING_PARAM_NAME);
+        contextPathSuffix = config.getInitParameter(CONTEXT_PATH_SUFFIX);
     }
 
     private void loadPropertiesFromManifest(ServletConfig config) {
@@ -99,23 +98,6 @@ public class IndexTemplateServlet extends HttpServlet {
         }
     }
 
-    private String findVersioning(Properties propertiesOverridenWithSystem) {
-        String versionName = initParamNameToName(versioningName);
-        if (versionName == null) {
-            return "";
-        }
-        Object versionObj = propertiesOverridenWithSystem.getProperty(versionName);
-        String version = "";
-        if (versionObj != null) {
-            version = versionObj.toString();
-        }
-        if (version.endsWith("-SNAPSHOT")) {
-            version = "";
-            //            version = String.valueOf((new Date().getTime()));
-        }
-        return version;
-    }
-
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String template = loadTemplate(tplPath); // TODO do not load template each time for production
@@ -124,11 +106,14 @@ public class IndexTemplateServlet extends HttpServlet {
             return;
         }
 
-        HashMap<String, String> hashMap = new HashMap<String, String>();
-        hashMap.put("contextPath", req.getContextPath());
-        hashMap.put("fullWebPath", req.getRequestURL().toString().replace(req.getRequestURI(), req.getContextPath()));
+        HashMap<String, String> hashMap = new HashMap<>();
+        String contextPath = req.getContextPath();
+        if (contextPathSuffix != null && !contextPathSuffix.equals("")) {
+            contextPath += contextPathSuffix;
+        }
+        hashMap.put("contextPath", contextPath);
+        hashMap.put("fullWebPath", req.getRequestURL().toString().replace(req.getRequestURI(), contextPath));
         Properties propertiesOverridenWithSystem = getPropertiesOverridenWithSystem();
-        fillVersioningInfo(hashMap, propertiesOverridenWithSystem);
         for (String propertyName : propertiesNames.keySet()) {
             hashMap.put(propertyName, propertiesOverridenWithSystem.getProperty(propertyName));
         }
@@ -138,15 +123,5 @@ public class IndexTemplateServlet extends HttpServlet {
         resp.setStatus(200);
         resp.setContentType("text/html; charset=utf-8");
         resp.getWriter().write(response);
-    }
-
-    private void fillVersioningInfo(HashMap<String, String> hashMap, Properties propertiesOverridenWithSystem) {
-        String versioning = findVersioning(propertiesOverridenWithSystem);
-        hashMap.put("versioning", versioning);
-        if (versioning.isEmpty()) {
-            hashMap.put("versioningQuery", "");
-        } else {
-            hashMap.put("versioningQuery", "?v=" + versioning);
-        }
     }
 }
