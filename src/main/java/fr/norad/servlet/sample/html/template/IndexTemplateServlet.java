@@ -39,16 +39,17 @@ public class IndexTemplateServlet extends HttpServlet {
     private final Properties manifestProperties = new Properties();
     private final Map<String, String> propertiesNames = new HashMap<>();
 
-    private String tplPath;
     private String contextPathSuffix;
+    private String template;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        tplPath = config.getInitParameter(TEMPLATE_PATH);
+        String tplPath = config.getInitParameter(TEMPLATE_PATH);
         Validate.notNull(tplPath, "{} init param must be set", TEMPLATE_PATH);
         loadPropertiesFromManifest(config);
         contextPathSuffix = config.getInitParameter(CONTEXT_PATH_SUFFIX);
+        template = loadTemplate(tplPath);
     }
 
     private void loadPropertiesFromManifest(ServletConfig config) {
@@ -100,7 +101,6 @@ public class IndexTemplateServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String template = loadTemplate(tplPath); // TODO do not load template each time for production
         if (template == null) {
             resp.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
