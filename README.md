@@ -42,3 +42,50 @@ In this example, this var will be replace in the template :
 - ${hcWsUrl} :will be replaced by the 'HousecreamWebServiceUrl' manifest.mf property value
 
 
+To index forwarder
+==================
+
+	<error-page>
+		<error-code>404</error-code>
+		<location>/notFoundResource</location>
+	</error-page>
+
+	<servlet>
+		<servlet-name>ToIndex</servlet-name>
+		<servlet-class>fr.norad.servlet.sample.html.template.ToIndexForwardedServlet</servlet-class>
+		<init-param>
+			<param-name>indexMappings</param-name>
+			<param-value>
+			     /doc/ : /doc/index.html
+			     / : /index.html
+			</param-value>
+		</init-param>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ToIndex</servlet-name>
+		<url-pattern>/notFoundResource</url-pattern>
+	</servlet-mapping>
+	
+	
+Allow you to redirect a url to a real page.
+This is usefull when you are using new html5 history feature and want to have a real page behind it.
+
+How it work :
+
+This create a servlet that will be mapped on the 404 error page. When you ask for a real css file for example,
+since it exists, you will be able to get it. When this link point to an html5 history page (ex : /users/43/pref)
+you will go to the 404 error page. and the servlet can now do the job.
+
+In this example I have 2 real page (/index.html is the app, /doc/index.html is the doc of the app)
+Based on the beginning of the URL, the forwarder know the page that should be returned.
+- for /doc/api/users you will receive the /doc/index.html page
+- for /users/43/pref you will receive the /index.html page
+
+The rest of the process to display the good information will be done by the Javascript framework.  
+
+
+
+
+
+
+
