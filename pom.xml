@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>fr.norad.servlet.sample.html.template</groupId>
@@ -7,7 +6,7 @@
 	<packaging>jar</packaging>
 	<name>Servlet sample html template</name>
 	<description>Provide servlet for sample html templating without jsp</description>
-	<version>0.5-SNAPSHOT</version>
+	<version>0.5</version>
 
 	<parent>
 		<groupId>fr.norad.parent</groupId>
@@ -19,7 +18,8 @@
 		<connection>scm:git:git://github.com/n0rad/servlet-sample-html-template.git</connection>
 		<developerConnection>scm:git:git@github.com:n0rad/servlet-sample-html-template.git</developerConnection>
 		<url>http://github.com/n0rad/servlet-sample-html-template</url>
-	</scm>
+	  <tag>servlet-sample-html-template-0.5</tag>
+  </scm>
 
 	<dependencies>
 		<dependency>
