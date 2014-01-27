@@ -21,13 +21,13 @@ import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.text.StrSubstitutor;
 
@@ -36,8 +36,7 @@ public class IndexTemplateServlet extends HttpServlet {
     private static final String TEMPLATE_PATH = "tplPath";
     private static final String CONTEXT_PATH_SUFFIX = "contextPathSuffix";
 
-    private final Properties manifestProperties = new Properties();
-    private final Map<String, String> propertiesNames = new HashMap<>();
+    private final Map<String, String> properties = new HashMap<>();
 
     private String contextPathSuffix;
     private String template;
@@ -47,26 +46,42 @@ public class IndexTemplateServlet extends HttpServlet {
         super.init(config);
         String tplPath = config.getInitParameter(TEMPLATE_PATH);
         Validate.notNull(tplPath, "{} init param must be set", TEMPLATE_PATH);
-        loadPropertiesFromManifest(config);
+        loadProperties(config);
         contextPathSuffix = config.getInitParameter(CONTEXT_PATH_SUFFIX);
         template = loadTemplate(tplPath);
     }
 
-    private void loadPropertiesFromManifest(ServletConfig config) {
+    private void loadProperties(ServletConfig config) {
         @SuppressWarnings("unchecked")
         Enumeration<String> initParameterNames = config.getInitParameterNames();
         while (initParameterNames.hasMoreElements()) {
             String initParamName = initParameterNames.nextElement();
             if (initParamName.endsWith(".property")) {
                 String initParamValue = config.getInitParameter(initParamName);
-                String value = WarManifestUtils.getWarManifestAttribute(getServletContext(), initParamValue);
+                String value = loadValue(initParamValue);
                 String name = initParamNameToName(initParamName);
-                propertiesNames.put(name, initParamValue);
-                if (value != null) {
-                    manifestProperties.put(name, value);
-                }
+                properties.put(name, value);
             }
         }
+    }
+
+    private String loadValue(String initParamValue) {
+        String valueFromManifest = loadValueFromManifestSafely(initParamValue);
+        String valueFromSystem = System.getProperty(initParamValue);
+        if (valueFromManifest == null && valueFromSystem == null) {
+            throw new IllegalArgumentException("Properties " + initParamValue + "has not been found either in " +
+              "Manifest and System properties.");
+        }
+        return ObjectUtils.firstNonNull(valueFromSystem, valueFromManifest);
+    }
+
+    private String loadValueFromManifestSafely(String initParamValue) {
+        String value = null;
+        try {
+            value = WarManifestUtils.getWarManifestAttribute(getServletContext(), initParamValue);
+        } catch (IllegalArgumentException ex) {
+        }
+        return value;
     }
 
     private String initParamNameToName(String initParamName) {
@@ -74,17 +89,6 @@ public class IndexTemplateServlet extends HttpServlet {
             return null;
         }
         return initParamName.substring(0, initParamName.indexOf('.'));
-    }
-
-    private Properties getPropertiesOverridenWithSystem() {
-        Properties finalProperties = new Properties(manifestProperties);
-        for (String name : propertiesNames.keySet()) {
-            String systemValue = System.getProperty(propertiesNames.get(name));
-            if (systemValue != null) {
-                finalProperties.put(name, systemValue);
-            }
-        }
-        return finalProperties;
     }
 
     private String loadTemplate(String tplPath) {
@@ -106,17 +110,13 @@ public class IndexTemplateServlet extends HttpServlet {
             return;
         }
 
-        HashMap<String, String> hashMap = new HashMap<>();
+        HashMap<String, String> hashMap = new HashMap<>(properties);
         String contextPath = req.getContextPath();
         if (contextPathSuffix != null && !contextPathSuffix.equals("")) {
             contextPath += contextPathSuffix;
         }
         hashMap.put("contextPath", contextPath);
         hashMap.put("fullWebPath", req.getRequestURL().toString().replace(req.getRequestURI(), contextPath));
-        Properties propertiesOverridenWithSystem = getPropertiesOverridenWithSystem();
-        for (String propertyName : propertiesNames.keySet()) {
-            hashMap.put(propertyName, propertiesOverridenWithSystem.getProperty(propertyName));
-        }
 
         String response = StrSubstitutor.replace(template, hashMap);
 
