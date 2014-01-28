@@ -41,6 +41,10 @@ public class IndexTemplateServlet extends HttpServlet {
     private String contextPathSuffix;
     private String template;
 
+    Map<String, String> getProperties() {
+        return properties;
+    }
+
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
@@ -51,7 +55,7 @@ public class IndexTemplateServlet extends HttpServlet {
         template = loadTemplate(tplPath);
     }
 
-    private void loadProperties(ServletConfig config) {
+    void loadProperties(ServletConfig config) {
         @SuppressWarnings("unchecked")
         Enumeration<String> initParameterNames = config.getInitParameterNames();
         while (initParameterNames.hasMoreElements()) {
