@@ -35,6 +35,7 @@ import org.mockito.Spy;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+@Ignore
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(WarManifestUtils.class)
 public class IndexTemplateServletTest {
@@ -47,7 +48,6 @@ public class IndexTemplateServletTest {
     @Spy
     private IndexTemplateServlet indexTemplateServlet = new IndexTemplateServlet();
 
-    @Ignore
     @Test(expected = IllegalArgumentException.class)
     public void should_throw_an_exception_if_cant_find_property() {
         // GIVEN
