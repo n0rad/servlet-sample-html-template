@@ -25,6 +25,8 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class ToIndexForwardedServletTest {

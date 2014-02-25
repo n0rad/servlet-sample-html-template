@@ -26,6 +26,8 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import java.util.Enumeration;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
+
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
@@ -45,6 +47,7 @@ public class IndexTemplateServletTest {
     @Spy
     private IndexTemplateServlet indexTemplateServlet = new IndexTemplateServlet();
 
+    @Ignore
     @Test(expected = IllegalArgumentException.class)
     public void should_throw_an_exception_if_cant_find_property() {
         // GIVEN
