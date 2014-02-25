@@ -6,7 +6,7 @@
 	<packaging>jar</packaging>
 	<name>Servlet sample html template</name>
 	<description>Provide servlet for sample html templating without jsp</description>
-	<version>0.8-SNAPSHOT</version>
+	<version>0.8</version>
 
 	<parent>
 		<groupId>fr.norad.parent</groupId>
