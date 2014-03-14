@@ -18,8 +18,7 @@
 		<connection>scm:git:git://github.com/n0rad/servlet-sample-html-template.git</connection>
 		<developerConnection>scm:git:git@github.com:n0rad/servlet-sample-html-template.git</developerConnection>
 		<url>http://github.com/n0rad/servlet-sample-html-template</url>
-	  <tag>servlet-sample-html-template-0.8</tag>
-  </scm>
+       </scm>
 
 	<dependencies>
 		<dependency>

@@ -29,7 +29,7 @@ public class WarManifestUtils {
         if (fromJarValue != null) {
             return fromJarValue;
         }
-        InputStream manifestIn = servletContext.getResourceAsStream("META-INF/MANIFEST.MF");
+        InputStream manifestIn = servletContext.getResourceAsStream("/META-INF/MANIFEST.MF");
         if (manifestIn != null) { // tomcat
             try {
                 Manifest manifest = new Manifest(manifestIn);
