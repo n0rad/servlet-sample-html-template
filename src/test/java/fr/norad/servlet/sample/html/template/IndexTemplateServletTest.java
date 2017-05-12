@@ -26,7 +26,6 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import java.util.Enumeration;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
-
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -58,7 +57,7 @@ public class IndexTemplateServletTest {
         setUpMocks(propertyName, manifestPropertyValue, systemPropertyValue);
 
         // WHEN
-        indexTemplateServlet.loadProperties(servletConfig);
+//        indexTemplateServlet.loadProperties(servletConfig);
     }
 
     @Test
@@ -71,11 +70,11 @@ public class IndexTemplateServletTest {
         setUpMocks(propertyName, manifestPropertyValue, systemPropertyValue);
 
         // WHEN
-        indexTemplateServlet.loadProperties(servletConfig);
+        //       indexTemplateServlet.loadProperties(servletConfig);
 
         // THEN
-        assertThat(indexTemplateServlet.getProperties()).hasSize(1);
-        assertThat(indexTemplateServlet.getProperties()).contains(entry(propertyName, manifestPropertyValue));
+        assertThat(indexTemplateServlet.manifestProperties).hasSize(1);
+        assertThat(indexTemplateServlet.manifestProperties).contains(entry(propertyName, manifestPropertyValue));
     }
 
     @Test
@@ -88,11 +87,11 @@ public class IndexTemplateServletTest {
         setUpMocks(propertyName, manifestPropertyValue, systemPropertyValue);
 
         // WHEN
-        indexTemplateServlet.loadProperties(servletConfig);
+        //     indexTemplateServlet.loadProperties(servletConfig);
 
         // THEN
-        assertThat(indexTemplateServlet.getProperties()).hasSize(1);
-        assertThat(indexTemplateServlet.getProperties()).contains(entry(propertyName, systemPropertyValue));
+        assertThat(indexTemplateServlet.manifestProperties).hasSize(1);
+        assertThat(indexTemplateServlet.manifestProperties).contains(entry(propertyName, systemPropertyValue));
     }
 
     @Test
@@ -105,11 +104,11 @@ public class IndexTemplateServletTest {
         setUpMocks(propertyName, manifestPropertyValue, systemPropertyValue);
 
         // WHEN
-        indexTemplateServlet.loadProperties(servletConfig);
+//        indexTemplateServlet.loadProperties(servletConfig);
 
         // THEN
-        assertThat(indexTemplateServlet.getProperties()).hasSize(1);
-        assertThat(indexTemplateServlet.getProperties()).contains(entry(propertyName, systemPropertyValue));
+        assertThat(indexTemplateServlet.manifestProperties).hasSize(1);
+        assertThat(indexTemplateServlet.manifestProperties).contains(entry(propertyName, systemPropertyValue));
     }
 
     private void setUpMocks(String propertyName, String manifestPropertyValue, String systemPropertyValue) {
@@ -125,9 +124,9 @@ public class IndexTemplateServletTest {
         doReturn(servletContext).when(indexTemplateServlet).getServletContext();
 
         when(WarManifestUtils.getWarManifestAttribute(servletContext, propertyNameValue)).thenReturn
-          (manifestPropertyValue);
+                (manifestPropertyValue);
 
-        if(systemPropertyValue != null){
+        if (systemPropertyValue != null) {
             System.setProperty(propertyNameValue, systemPropertyValue);
         }
     }
